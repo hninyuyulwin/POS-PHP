@@ -16,28 +16,32 @@
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-user fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                      <input type="text" name="name" class="form-control" placeholder="Your Name" />
+                      <input value="<?php echo set_values('username'); ?>" type="text" name="username" class="form-control <?php echo !empty($errors['username']) ? 'border-danger' : ''; ?> " placeholder="Your Name" />
+                      <span class="text-danger"><?php echo empty($errors['username']) ? '' : "*" . $errors['username']; ?></span>
                     </div>
                   </div>
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                      <input type="email" name="email" class="form-control" placeholder="Your Email" />
+                      <input value="<?php echo set_values('email'); ?>" type="text" name="email" class="form-control <?php echo !empty($errors['username']) ? 'border-danger' : ''; ?> " placeholder="Your Email" />
+                      <span class="text-danger"><?php echo empty($errors['email']) ? '' : "*" . $errors['email']; ?></span>
                     </div>
                   </div>
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                      <input type="password" name="password" class="form-control" placeholder="Password" />
+                      <input value="<?php echo set_values('password'); ?>" type="password" name="password" class="form-control <?php echo !empty($errors['username']) ? 'border-danger' : ''; ?> " placeholder="Password" />
+                      <span class="text-danger"><?php echo empty($errors['password']) ? '' : "*" . $errors['password']; ?></span>
                     </div>
                   </div>
 
                   <div class="d-flex flex-row align-items-center mb-4">
                     <i class="fas fa-key fa-lg me-3 fa-fw"></i>
                     <div class="form-outline flex-fill mb-0">
-                      <input type="password" name="rep-pass" class="form-control" placeholder="Repeat your password" />
+                      <input value="<?php echo set_values('password_retype'); ?>" type="password" name="password_retype" class="form-control <?php echo !empty($errors['username']) ? 'border-danger' : ''; ?> " placeholder="Repeat your password" />
+                      <span class="text-danger"><?php echo empty($errors['password_retype']) ? '' : "*" . $errors['password_retype']; ?></span>
                     </div>
                   </div>
 
