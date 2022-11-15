@@ -6,21 +6,25 @@
         <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.svg" class="img-fluid mb-3" alt="Phone image">
       </div>
       <div class="col-md-7 col-lg-5 col-xl-5 offset-xl-1">
-        <form>
+        <form method="POST">
 
           <div class="d-flex align-items-center mb-3 pb-1">
             <i class="fas fa-cubes fa-2x me-3" style="color: #1266F1;"></i>
-            <span class="h1 fw-bold mb-0"><?= APP_NAME ?></span>
+            <a style="color: #000;text-decoration: none;" href="index.php?pg=login">
+              <span class="h1 fw-bold mb-0"><?= APP_NAME ?></span>
+            </a>
           </div>
 
           <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
 
           <div class="form-outline mb-4">
-            <input type="email" class="form-control form-control-lg" placeholder="Email address" />
+            <input autocomplete="off" name="email" value="<?php echo set_values('email'); ?>" type="email" class="form-control form-control-lg  <?php echo !empty($errors['email']) ? 'border-danger' : ''; ?> " placeholder="Email address" />
+            <span class="text-danger"><?php echo empty($errors['email']) ? '' : "*" . $errors['email']; ?></span>
           </div>
 
           <div class="form-outline mb-4">
-            <input type="password" class="form-control form-control-lg" placeholder="Password" />
+            <input name="password" value="<?php echo set_values('password'); ?>" type="password" class="form-control form-control-lg  <?php echo !empty($errors['password']) ? 'border-danger' : ''; ?> " placeholder="Password" />
+            <span class="text-danger"><?php echo empty($errors['password']) ? '' : "*" . $errors['password']; ?></span>
           </div>
 
           <div class="pt-1 mb-4">

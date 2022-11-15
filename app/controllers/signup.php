@@ -2,6 +2,7 @@
 $errors = [];
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
+  $user = new User();
   $_POST['role'] = 'user';
   $_POST['date'] = date("Y-m-d H:i:s");
 
@@ -9,9 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   //$arr = allowed_column($_POST, 'users');
   //query($query, $arr);
 
-  $errors  = validate($_POST, 'users');
+  $errors  = $user->validate($_POST);
   if (empty($errors)) {
-    insert($_POST, 'users');
+    $_POST['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $user->insert($_POST);
+    redirect('login');
   }
 }
 require views_path('auth/signup');

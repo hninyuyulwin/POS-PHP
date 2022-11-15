@@ -12,25 +12,36 @@
         <li class="nav-item">
           <a class="nav-link" href="index.php?pg=admin">Admin</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="index.php?pg=login">Login</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="index.php?pg=signup">Signup</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Hi, Username
-          </a>
-          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="index.php?pg=profile">Profile</a></li>
-            <li><a class="dropdown-item" href="index.php?pg=page-setting">Profile-Setting</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="index.php?pg=logout">Logout</a></li>
-          </ul>
-        </li>
+        <?php
+        if (empty($_SESSION['USER'])) {
+        ?>
+          <li class="nav-item">
+            <a class="nav-link" href="index.php?pg=login">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="index.php?pg=signup">Signup</a>
+          </li>
+        <?php
+        } else {
+        ?>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Hi, <?php echo auth('username'); ?>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <li><a class="dropdown-item" href="index.php?pg=profile">Profile</a></li>
+              <li><a class="dropdown-item" href="index.php?pg=page-setting">Profile-Setting</a></li>
+              <li>
+                <hr class="dropdown-divider">
+              </li>
+              <li><a class="dropdown-item" href="index.php?pg=logout">Logout</a></li>
+            </ul>
+          </li>
+        <?php
+        }
+
+        ?>
       </ul>
       <form class="d-flex">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">

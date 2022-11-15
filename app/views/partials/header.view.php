@@ -8,6 +8,8 @@
   <title><?= esc(APP_NAME) ?></title>
   <link rel="stylesheet" href="assets/css/bootstrap.min.css">
   <link rel="stylesheet" href="assets/css/all.min.css">
+  <link rel="stylesheet" href="assets/css/main.css">
+
 </head>
 
 <body>
@@ -20,4 +22,4 @@
     <?php require views_path('partials/nav'); ?>
   <?php endif; ?>
 
-  <div class="container-fluid" style="min-height: 550px;min-width: 350px;">
+  <div class="container-fluid" style="min-height: 650px;min-width: 350px;">
