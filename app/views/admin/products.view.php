@@ -21,7 +21,7 @@
         <td><?php echo esc($product['qty']); ?></td>
         <td><?php echo esc($product['amount']); ?></td>
         <td>
-          <img src="<?php echo $product['image']; ?>" width="100">
+          <img src="<?= crop($product['image']); ?>" width="100">
         </td>
         <td><?php echo date("jS M, Y", strtotime($product['date'])); ?></td>
         <td>

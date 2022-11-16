@@ -144,8 +144,17 @@
     </div>
 
   </div>
-
-
 </div>
+
+<script>
+  function get_data() {
+    var ajax = new XMLHttpRequest();
+    ajax.addEventListener('readystatechange', function(e) {
+      console.log(ajax.responseText());
+    });
+    ajax.open('POST', 'index.php?pg=home', ture);
+    ajax.send();
+  }
+</script>
 
 <?php require views_path('partials/footer'); ?>
