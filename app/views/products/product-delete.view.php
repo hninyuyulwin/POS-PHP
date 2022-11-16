@@ -1,0 +1,43 @@
+<?php require views_path('partials/header'); ?>
+
+<div class="row py-5">
+  <div class="col-md-4 offset-md-4">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="text-danger"><i class="fa fa-hamburger"></i> Delete Product</h3>
+      </div>
+      <div class="card-body">
+        <?php if (!empty($row)) : ?>
+          <div class="alert alert-warning text-center"><i class="fa fa-trash me-2"></i>Are you sure want to delete?</div>
+          <form action="" method="post" enctype="multipart/form-data">
+            <div class="form-group mb-4">
+              <label for="description"><i class="fa fa-user me-2"></i>Product Description</label>
+              <input disabled value="<?php echo set_values('description', $row['description']); ?>" type="text" name="description" id="description" class="form-control <?php echo empty($errors['description']) ? '' : 'border-danger'; ?>" placeholder="Enter Product Description">
+              <span class="text-danger"><?php echo empty($errors['description']) ? "" : "*" . $errors['description']; ?></span>
+            </div>
+            <div class="form-group mb-4">
+              <label for="barcode"><i class="fa fa-barcode me-2"></i>Barcode</label>
+              <span class="text-danger">*</span>
+              <span class="text-muted">(Optional)</span>
+              <input disabled value="<?php echo set_values('barcode', $row['barcode']); ?>" type="text" name="barcode" id="barcode" class=" form-control" placeholder="Product Barcode">
+            </div>
+
+            <div class="form-group mb-4">
+              <img src="<?php echo $row['image']; ?>" class="mt-3 mx-auto d-block" width="200" style="border-radius: 10px;">
+            </div>
+
+            <button type="submit" class="btn btn-danger">Delete</button>
+            <a href="index.php?pg=admin&tab=products">
+              <button type="button" class="btn btn-outline-primary">Cancle</button>
+            </a>
+          </form>
+        <?php else : ?>
+          <div class="alert alert-danger">Product not found!</div>
+          <a href="index.php?pg=admin&tab=products" class="mt-2 btn btn-info">Back</a>
+        <?php endif; ?>
+      </div>
+    </div>
+  </div>
+</div>
+
+<?php require views_path('partials/footer'); ?>

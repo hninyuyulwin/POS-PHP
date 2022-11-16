@@ -23,10 +23,10 @@
         <td>
           <img src="<?php echo $product['image']; ?>" width="100">
         </td>
-        <td><?php echo esc($product['date']); ?></td>
+        <td><?php echo date("jS M, Y", strtotime($product['date'])); ?></td>
         <td>
-          <a href="index.php?pg=product-edit&id=<?= $product['id'];?>" class="btn btn-sm btn-warning">Edit</a>
-          <a href="index.php?pg=product-delete&id=<?= $product['id'];?>" class="btn btn-danger btn-sm">Delete</a>
+          <a href="index.php?pg=product-edit&id=<?= $product['id']; ?>" class="btn btn-sm btn-warning">Edit</a>
+          <a href="index.php?pg=product-delete&id=<?= $product['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
         </td>
       </tr>
       <?php

@@ -47,6 +47,15 @@ class Model extends Database
     $db->query($query, $clean_array);
   }
 
+  public function delete($id)
+  {
+    $query = "DELETE FROM $this->table WHERE id = :id LIMIT 1";
+    $clean_array['id'] = $id;
+
+    $db = new Database();
+    $db->query($query, $clean_array);
+  }
+
   public function where($data)
   {
     //$query = "SELECT * FROM users WHERE email=:email AND password=:password";
