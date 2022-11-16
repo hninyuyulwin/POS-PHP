@@ -14,17 +14,19 @@
     foreach ($products as $product) :
   ?>
       <tr>
-        <td><?php echo esc($product->barcode); ?></td>
-        <td><?php echo esc($product->description); ?></td>
-        <td><?php echo esc($product->qty); ?></td>
-        <td><?php echo esc($product->amount); ?></td>
+        <td><?php echo esc($product['barcode']); ?></td>
         <td>
-          <img src="<?php echo esc($product->image); ?>" alt="">
+          <a href="index.php?pg=product-single&id=<?php echo $product['id']; ?>"><?php echo esc($product['description']); ?></a>
         </td>
-        <td><?php echo esc($product->date); ?></td>
+        <td><?php echo esc($product['qty']); ?></td>
+        <td><?php echo esc($product['amount']); ?></td>
         <td>
-          <a href="" class="btn btn-sm btn-warning">Edit</a>
-          <a href="" class="btn btn-danger btn-sm">Delete</a>
+          <img src="<?php echo $product['image']; ?>" width="100">
+        </td>
+        <td><?php echo esc($product['date']); ?></td>
+        <td>
+          <a href="index.php?pg=product-edit&id=<?= $product['id'];?>" class="btn btn-sm btn-warning">Edit</a>
+          <a href="index.php?pg=product-delete&id=<?= $product['id'];?>" class="btn btn-danger btn-sm">Delete</a>
         </td>
       </tr>
       <?php

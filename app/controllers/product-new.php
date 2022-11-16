@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   $_POST['barcode'] = empty($_POST['barcode']) ? $product->generate_barcode() : $_POST['barcode'];
   $_POST['user_id'] = auth('id');
 
-  if (!empty($_FILES)) {
+  if (!empty($_FILES['image']['name'])) {
     $_POST['image'] = $_FILES['image'];
   }
 

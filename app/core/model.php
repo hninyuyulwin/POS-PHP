@@ -29,6 +29,23 @@ class Model extends Database
     $db->query($query, $clean_array);
   }
 
+  public function update($id, $data)
+  {
+    $clean_array = $this->get_allowed_column($data, $this->table);
+    $keys = array_keys($clean_array);
+
+    //"UPDATE Table set id= :id,description = :description where id=2";
+    $query = "UPDATE $this->table SET ";
+    foreach ($keys as $column) {
+      $query .= "$column = :$column,";
+    }
+    $query = trim($query, ",");
+    $query .= " WHERE id = :id";
+    $clean_array['id'] = $id;
+
+    $db = new Database();
+    $db->query($query, $clean_array);
+  }
 
   public function where($data)
   {
@@ -44,7 +61,25 @@ class Model extends Database
     $db = new Database();
     return $db->query($query, $data);
   }
+
+  public function first($data)
+  {
+    //$query = "SELECT * FROM users WHERE email=:email AND password=:password";
+    $keys = array_keys($data);
+
+    $query = "SELECT * FROM $this->table WHERE ";
+    foreach ($keys as $key) {
+      $query .= "$key = :$key && ";
+    }
+    $query = trim($query, "&& ");
+
+    $db = new Database();
+    $res = $db->query($query, $data);
+    if ($res) {
+      return $res[0];
+    }
+    return false;
+  }
 }
 
 $m = new Model();
-$m->query("SELECT * FROM users");
