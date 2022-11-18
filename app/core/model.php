@@ -56,7 +56,7 @@ class Model extends Database
     $db->query($query, $clean_array);
   }
 
-  public function where($data)
+  public function where($data, $limit = 10, $offset = 0, $order = "DESC", $order_column = "id")
   {
     //$query = "SELECT * FROM users WHERE email=:email AND password=:password";
     $keys = array_keys($data);
@@ -66,9 +66,18 @@ class Model extends Database
       $query .= "$key = :$key && ";
     }
     $query = trim($query, "&& ");
+    $query .= " ORDER BY $order_column $order LIMIT $limit OFFSET $offset";
 
     $db = new Database();
     return $db->query($query, $data);
+  }
+
+  public function getAll($limit = 10, $offset = 0, $order = "DESC", $order_column = "id")
+  {
+    $query = "SELECT * FROM $this->table ORDER BY $order_column $order LIMIT $limit OFFSET $offset ";
+
+    $db = new Database();
+    return $db->query($query);
   }
 
   public function first($data)

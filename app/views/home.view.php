@@ -7,7 +7,6 @@
     <div class="col-md-7 shadow-lg p-4 pt-2" style="min-height: 600px;">
       <h3 class="text-center mb-5">Items
         <div class="col-5 float-end">
-
           <div class="input-group">
             <div class="form-outline">
               <input type="search" id="form1" class="form-control" placeholder="Search..." />
@@ -20,61 +19,7 @@
       </h3>
 
       <div class="js-products d-flex" style="flex-wrap: wrap;height: 90%;overflow-y: scroll;">
-        <!-- card -->
-        <div class="card border-0 me-3">
-          <a href="">
-            <img src="assets/images/image.jpg" class="rounded border" alt="" width="200" height="200">
-          </a>
-          <div class="p-2">
-            <h5>Soft Drink Coffee</h5>
-            <p><b>$5.00</b></p>
-          </div>
-        </div>
-        <!--end card-->
-        <!-- card -->
-        <div class="card border-0 me-3">
-          <a href="">
-            <img src="assets/images/caramel-moolatte.png" class="rounded border" alt="" width="200" height="200">
-          </a>
-          <div class="p-2">
-            <h5>Caramel Moolatte</h5>
-            <p><b>$5.00</b></p>
-          </div>
-        </div>
-        <!--end card-->
-        <!-- card -->
-        <div class="card border-0 me-3">
-          <a href="">
-            <img src="assets/images/orangeSoftDrink.jpg" class="rounded border" alt="" width="200" height="200">
-          </a>
-          <div class="p-2">
-            <h5>Caramel Moolatte</h5>
-            <p><b>$5.00</b></p>
-          </div>
-        </div>
-        <!--end card-->
-        <!-- card -->
-        <div class="card border-0 me-3">
-          <a href="">
-            <img src="assets/images/fast-food.jpg" class="rounded border" alt="" width="200" height="200">
-          </a>
-          <div class="p-2">
-            <h5>Caramel Moolatte</h5>
-            <p><b>$5.00</b></p>
-          </div>
-        </div>
-        <!--end card-->
-        <!-- card -->
-        <div class="card border-0 me-3">
-          <a href="">
-            <img src="assets/images/Taco.jpg" class="rounded border" alt="" width="200" height="200">
-          </a>
-          <div class="p-2">
-            <h5>Caramel Moolatte</h5>
-            <p><b>$5.00</b></p>
-          </div>
-        </div>
-        <!--end card-->
+
       </div>
     </div>
 
@@ -147,14 +92,55 @@
 </div>
 
 <script>
-  function get_data() {
+  function send_data(data) {
     var ajax = new XMLHttpRequest();
+
     ajax.addEventListener('readystatechange', function(e) {
-      console.log(ajax.responseText());
+
+      if (ajax.readyState == 4) {
+        if (ajax.status == 200) {
+          handle_result(ajax.responseText);
+        } else {
+          console.log("An error occurs! Error Code :" + ajax.status + ".Error Message :" + ajax.statusText);
+          console.log(ajax);
+        }
+      }
+      //console.log(ajax.readyState);
     });
-    ajax.open('POST', 'index.php?pg=home', ture);
+    ajax.open('POST', 'index.php?pg=ajax', true);
     ajax.send();
   }
+
+  function handle_result(result) {
+    var obj = JSON.parse(result);
+
+    if (typeof obj != 'undefined') {
+      // Valid JSON
+      var mydiv = document.querySelector(".js-products ");
+      mydiv.innerHTML = "";
+      for (var i = 0; i < obj.length; i++) {
+        mydiv.innerHTML += product_html(obj[i]);
+      }
+    }
+  }
+
+  function product_html(data) {
+    return `
+    <!-- card -->
+        <div class="card border-0 me-3">
+          <a href="">
+            <img src="${data.image}" class="rounded border" alt="" width="200" height="200">
+          </a>
+          <div class="p-2">
+            <h5>${data.description}</h5>
+            <p><b>${data.amount+" Ks"}</b></p>
+          </div>
+        </div>
+        <!--end card-->
+        `;
+  }
+
+  send_data();
 </script>
 
 <?php require views_path('partials/footer'); ?>
