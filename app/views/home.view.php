@@ -9,7 +9,7 @@
         <div class="col-5 float-end">
           <div class="input-group">
             <div class="form-outline">
-              <input type="search" id="form1" class="form-control" placeholder="Search..." />
+              <input oninput="search_item(event)" type="search" id="form1" class="form-control js-search" placeholder="Search..." />
             </div>
             <button type="button" class="btn btn-primary">
               <i class="fas fa-search"></i>
@@ -92,6 +92,23 @@
 </div>
 
 <script>
+  //var search_box = document.querySelector('.js-search');
+  //search_box.addEventListener("change",function(e){
+  //  console.log("Changed");
+  //});
+
+  function search_item(e) {
+    //console.log('Hello Changed');
+    var text = e.target.value.trim();
+
+    //if (text == "") return;
+
+    var data = {};
+    data.data_type = "search";
+    data.text = text;
+    send_data(data);
+  };
+
   function send_data(data) {
     var ajax = new XMLHttpRequest();
 
@@ -108,10 +125,11 @@
       //console.log(ajax.readyState);
     });
     ajax.open('POST', 'index.php?pg=ajax', true);
-    ajax.send();
+    ajax.send(JSON.stringify(data)); // stringify = convert object to string
   }
 
   function handle_result(result) {
+    console.log(result);
     var obj = JSON.parse(result);
 
     if (typeof obj != 'undefined') {
@@ -127,7 +145,7 @@
   function product_html(data) {
     return `
     <!-- card -->
-        <div class="card border-0 me-3">
+        <div class="card text-center border-0 me-3">
           <a href="">
             <img src="${data.image}" class="rounded border" alt="" width="200" height="200">
           </a>
@@ -140,7 +158,10 @@
         `;
   }
 
-  send_data();
+  send_data({
+    data_type: "search",
+    text: ""
+  });
 </script>
 
 <?php require views_path('partials/footer'); ?>
