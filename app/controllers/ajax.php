@@ -1,4 +1,3 @@
-
 <?php
 
 defined("ABSPATH") ? "" : die();
@@ -20,7 +19,15 @@ if (!empty($raw_data)) {
         $rows = $productClass->getAll();
       }
       if ($rows) {
-        echo json_encode($rows);
+        /*
+        foreach ($rows as $key => $row) {
+          $rows[$key]['image'] = crop($row['image']);
+          $rows[$key]['description'] = strtoupper($row['description']);
+        }
+        */
+        $info['data_type'] = "search";
+        $info['data'] = $rows;
+        echo json_encode($info);
       }
     }
   }

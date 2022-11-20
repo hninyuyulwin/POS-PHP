@@ -18,7 +18,7 @@
         </div>
       </h3>
 
-      <div class="js-products d-flex" style="flex-wrap: wrap;height: 90%;overflow-y: scroll;">
+      <div onclick="add_item(event)" class="js-products d-flex" style="flex-wrap: wrap;height: 90%;overflow-y: scroll;">
 
       </div>
     </div>
@@ -27,60 +27,27 @@
       <div class="row">
         <h3 class="text-center mb-3">
           Cart
-          <span class="badge bg-warning rounded-circle">3</span>
+          <span class="badge bg-warning rounded-circle js-item-count">0</span>
         </h3>
       </div>
       <div class="table-responsive" style="height: 400px;overflow-y: scroll;">
         <table class="table table-striped table-hover">
-          <tr>
-            <th>Image</th>
-            <th>Description</th>
-            <th>Amount</th>
-          </tr>
-          <!--item-->
-          <tr>
-            <td>
-              <img src="assets/images/image.jpg" class="rounded border" alt="" width="100" height="100">
-            </td>
-            <td>
-              <p class="text-info"><b>Soft Drink Coffee</b></p>
-              <div class="input-group" style="max-width: 150px;">
-                <span class="input-group-text" style="cursor: pointer;" id="basic-addon1"><i class="fa fa-minus text-primary"></i></span>
-                <input type="number" class="form-control text-primary text-center" placeholder="1" value="1">
-                <span class="input-group-text" style="cursor: pointer;" id="basic-addon1"><i class="fa fa-plus text-primary"></i></span>
-              </div>
+          <thead>
+            <tr>
+              <th>Image</th>
+              <th>Description</th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody class="js-items">
 
-            </td>
-            <td>
-              <p><b>$5.00</b></p>
-            </td>
-          </tr>
-          <!--end item-->
-          <!--item-->
-          <tr>
-            <td>
-              <img src="assets/images/burgercombo.png" class="rounded border" alt="" width="100" height="100">
-            </td>
-            <td>
-              <p class="text-info"><b>Burger & Cola Combo Set</b></p>
-              <div class="input-group" style="max-width: 150px;">
-                <span class="input-group-text" style="cursor: pointer;" id="basic-addon1"><i class="fa fa-minus text-primary"></i></span>
-                <input type="number" class="form-control text-primary text-center" placeholder="1" value="1">
-                <span class="input-group-text" style="cursor: pointer;" id="basic-addon1"><i class="fa fa-plus text-primary"></i></span>
-              </div>
-
-            </td>
-            <td>
-              <p><b>$9.00</b></p>
-            </td>
-          </tr>
-          <!--end item-->
+          </tbody>
         </table>
       </div>
       <hr>
 
-      <div class="alert alert-success" style="font-size: 20px;">
-        Sub Total : $3.00
+      <div class="js-gtotal alert alert-success" style="font-size: 20px;">
+        Total : 0 Ks
       </div>
       <div class="float-end">
         <button class="btn btn-lg btn-primary">Checkout</button>
@@ -96,6 +63,9 @@
   //search_box.addEventListener("change",function(e){
   //  console.log("Changed");
   //});
+
+  var PRODUCTS = [];
+  var ITEMS = [];
 
   function search_item(e) {
     //console.log('Hello Changed');
@@ -129,25 +99,31 @@
   }
 
   function handle_result(result) {
-    console.log(result);
     var obj = JSON.parse(result);
 
     if (typeof obj != 'undefined') {
       // Valid JSON
-      var mydiv = document.querySelector(".js-products ");
-      mydiv.innerHTML = "";
-      for (var i = 0; i < obj.length; i++) {
-        mydiv.innerHTML += product_html(obj[i]);
+      if (obj.data_type == "search") {
+        var mydiv = document.querySelector(".js-products");
+        mydiv.innerHTML = "";
+        PRODUCTS = [];
+        if (obj.data != "") {
+          PRODUCTS = obj.data;
+          for (var i = 0; i < obj.data.length; i++) {
+            mydiv.innerHTML += product_html(obj.data[i], i);
+          }
+        }
       }
+
     }
   }
 
-  function product_html(data) {
+  function product_html(data, index) {
     return `
     <!-- card -->
         <div class="card text-center border-0 me-3">
-          <a href="">
-            <img src="${data.image}" class="rounded border" alt="" width="200" height="200">
+          <a href="#">
+            <img index="${index}" src="${data.image}" class="rounded border" alt="" width="200" height="200">
           </a>
           <div class="p-2">
             <h5>${data.description}</h5>
@@ -156,6 +132,64 @@
         </div>
         <!--end card-->
         `;
+  }
+
+  function item_html(data) {
+    return `
+      <!--item-->
+        <tr>
+          <td>
+            <img src="${data.image}" class="rounded border" alt="" width="100" height="100">
+          </td>
+          <td>
+            <p class="text-info"><b>${data.description}</b></p>
+            <div class="input-group" style="max-width: 150px;">
+              <span class="input-group-text" style="cursor: pointer;" id="basic-addon1"><i class="fa fa-minus text-primary"></i></span>
+              <input type="number" class="form-control text-primary text-center" placeholder="1" value="${data.qty}">
+              <span class="input-group-text" style="cursor: pointer;" id="basic-addon1"><i class="fa fa-plus text-primary"></i></span>
+            </div>
+
+          </td>
+          <td>
+            <p><b>${data.amount+" Ks"}</b></p>
+          </td>
+        </tr>
+      <!--end item-->
+    `;
+  }
+
+  function add_item(e) {
+    if (e.target.tagName == "IMG") {
+      var index = e.target.getAttribute("index");
+
+      // check if items exists
+      for (var i = ITEMS.length - 1; i >= 0; i--) {
+        if (ITEMS[i].id == PRODUCTS[index].id) {
+          ITEMS[i].qty += 1;
+          refresh_items_display();
+          return;
+        }
+      }
+      var temp = PRODUCTS[index];
+      temp.qty = 1;
+      ITEMS.push(temp);
+      refresh_items_display();
+    }
+  }
+
+  function refresh_items_display() {
+    var item_count = document.querySelector('.js-item-count');
+    item_count.innerHTML = ITEMS.length;
+
+    var items_div = document.querySelector('.js-items');
+    items_div.innerHTML = "";
+    var grand_total = 0;
+    for (let i = ITEMS.length - 1; i >= 0; i--) {
+      items_div.innerHTML += item_html(ITEMS[i]);
+      grand_total += ITEMS[i].qty * ITEMS[i].amount;
+    }
+    var gtotal_div = document.querySelector('.js-gtotal');
+    gtotal_div.innerHTML = "Total : " + grand_total + " Ks";
   }
 
   send_data({
