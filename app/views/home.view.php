@@ -1,5 +1,9 @@
 <?php require views_path('partials/header'); ?>
-
+<style>
+  .hide {
+    display: none;
+  }
+</style>
 <div class="container-fluid p-5 pt-3">
   <h2 class="text-center mb-5"><?= APP_NAME ?></h2>
 
@@ -9,7 +13,7 @@
         <div class="col-5 float-end">
           <div class="input-group">
             <div class="form-outline">
-              <input oninput="search_item(event)" type="search" id="form1" class="form-control js-search" placeholder="Search..." />
+              <input onkeyup="check_for_enter_key(event)" oninput="search_item(event)" type="search" id="form1" class="form-control js-search" placeholder="Search..." />
             </div>
             <button type="button" class="btn btn-primary">
               <i class="fas fa-search"></i>
@@ -37,6 +41,7 @@
               <th>Image</th>
               <th>Description</th>
               <th>Amount</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody class="js-items">
@@ -50,13 +55,24 @@
         Total : 0 Ks
       </div>
       <div class="float-end">
-        <button class="btn btn-lg btn-primary">Checkout</button>
-        <button class="btn btn-lg btn-outline-warning">Clear All</button>
+        <button onclick="show_amount_paid_modal()" class="btn btn-lg btn-primary" data-bs-target="#exampleModal">Checkout</button>
+        <button onclick="clear_all()" class="btn btn-lg btn-outline-warning">Clear All</button>
       </div>
     </div>
 
   </div>
 </div>
+
+<!-- modal start -->
+<div class="js-amount-paid-modal hide" style="background-color: #00000077;width: 100%;height: 100%;position: fixed;left: 0px;top: 0px;z-index: 999;">
+  <div class="shadow-lg" style="width: 500px;min-height: 250px;background-color: white;padding: 20px;margin: auto;margin-top: 12%;border-radius: 10px;">
+    <h4 class="text-center text-primary mb-2">Check Out</h4>
+    <input type="text" class="form-control my-3" placeholder="Enter Amount Paid">
+    <button class="btn btn-success">Next</button>
+    <button onclick="hide_amount_paid_modal()" class="btn btn-danger float-end">Cancle</button>
+  </div>
+</div>
+<!-- end modal -->
 
 <script>
   //var search_box = document.querySelector('.js-search');
@@ -66,6 +82,8 @@
 
   var PRODUCTS = [];
   var ITEMS = [];
+  var BARCODE = false;
+  var main_input = document.querySelector('.js-search');
 
   function search_item(e) {
     //console.log('Hello Changed');
@@ -85,12 +103,29 @@
     ajax.addEventListener('readystatechange', function(e) {
 
       if (ajax.readyState == 4) {
+
+        var mydiv = document.querySelector(".js-products");
+        mydiv.innerHTML = "";
+        PRODUCTS = [];
+
         if (ajax.status == 200) {
-          handle_result(ajax.responseText);
+          if (ajax.responseText.trim() != "") {
+            handle_result(ajax.responseText);
+          } else {
+            if (BARCODE) {
+              alert("That item was not found!");
+            }
+          }
         } else {
           console.log("An error occurs! Error Code :" + ajax.status + ".Error Message :" + ajax.statusText);
           console.log(ajax);
         }
+        // Clear main input if enter key pressed
+        if (BARCODE) {
+          main_input.value = "";
+          main_input.focus();
+        }
+        BARCODE = false;
       }
       //console.log(ajax.readyState);
     });
@@ -99,22 +134,24 @@
   }
 
   function handle_result(result) {
+    //console.log(result);
     var obj = JSON.parse(result);
 
     if (typeof obj != 'undefined') {
       // Valid JSON
       if (obj.data_type == "search") {
+
         var mydiv = document.querySelector(".js-products");
-        mydiv.innerHTML = "";
-        PRODUCTS = [];
         if (obj.data != "") {
           PRODUCTS = obj.data;
           for (var i = 0; i < obj.data.length; i++) {
             mydiv.innerHTML += product_html(obj.data[i], i);
           }
+          if (BARCODE && PRODUCTS.length == 1) {
+            add_item_from_index(0);
+          }
         }
       }
-
     }
   }
 
@@ -134,7 +171,7 @@
         `;
   }
 
-  function item_html(data) {
+  function item_html(data, index) {
     return `
       <!--item-->
         <tr>
@@ -144,36 +181,43 @@
           <td>
             <p class="text-info"><b>${data.description}</b></p>
             <div class="input-group" style="max-width: 150px;">
-              <span class="input-group-text" style="cursor: pointer;" id="basic-addon1"><i class="fa fa-minus text-primary"></i></span>
-              <input type="number" class="form-control text-primary text-center" placeholder="1" value="${data.qty}">
-              <span class="input-group-text" style="cursor: pointer;" id="basic-addon1"><i class="fa fa-plus text-primary"></i></span>
+              <span index="${index}" onclick="change_qty('down',event)" class="input-group-text" style="cursor: pointer;" id="basic-addon1"><i class="fa fa-minus text-primary"></i></span>
+              <input index="${index}" onblur="change_qty('input',event)" type="text" disabled class="form-control text-primary text-center bg-white" placeholder="1" value="${data.qty}">
+              <span index="${index}" onclick="change_qty('up',event)" class="input-group-text" style="cursor: pointer;" id="basic-addon1"><i class="fa fa-plus text-primary"></i></span>
             </div>
 
           </td>
           <td>
             <p><b>${data.amount+" Ks"}</b></p>
           </td>
+          <td>
+            <button onclick="clear_item(${index})" class="btn btn-sm btn-outline-danger"><i class="fa fa-times"></i></button>
+          </td>
         </tr>
       <!--end item-->
     `;
+  }
+
+  function add_item_from_index(index) {
+    // check if items exists
+    for (var i = ITEMS.length - 1; i >= 0; i--) {
+      if (ITEMS[i].id == PRODUCTS[index].id) {
+        ITEMS[i].qty += 1;
+        refresh_items_display();
+        return;
+      }
+    }
+    var temp = PRODUCTS[index];
+    temp.qty = 1;
+    ITEMS.push(temp);
+    refresh_items_display();
   }
 
   function add_item(e) {
     if (e.target.tagName == "IMG") {
       var index = e.target.getAttribute("index");
 
-      // check if items exists
-      for (var i = ITEMS.length - 1; i >= 0; i--) {
-        if (ITEMS[i].id == PRODUCTS[index].id) {
-          ITEMS[i].qty += 1;
-          refresh_items_display();
-          return;
-        }
-      }
-      var temp = PRODUCTS[index];
-      temp.qty = 1;
-      ITEMS.push(temp);
-      refresh_items_display();
+      add_item_from_index(index);
     }
   }
 
@@ -185,11 +229,66 @@
     items_div.innerHTML = "";
     var grand_total = 0;
     for (let i = ITEMS.length - 1; i >= 0; i--) {
-      items_div.innerHTML += item_html(ITEMS[i]);
+      items_div.innerHTML += item_html(ITEMS[i], i);
       grand_total += ITEMS[i].qty * ITEMS[i].amount;
     }
     var gtotal_div = document.querySelector('.js-gtotal');
     gtotal_div.innerHTML = "Total : " + grand_total + " Ks";
+  }
+
+  function clear_all() {
+    if (!confirm('Are you sure want to clear all in the list??!!')) {
+      return;
+    }
+    ITEMS = [];
+    refresh_items_display();
+  }
+
+  function clear_item(index) {
+    if (!confirm('Sure to Remove Item??')) {
+      return;
+    }
+    ITEMS.splice(index, 1);
+    refresh_items_display();
+  }
+
+  function change_qty(direction, e) {
+    var index = e.currentTarget.getAttribute('index');
+    if (direction == 'up') {
+      ITEMS[index].qty += 1;
+    } else if (direction == 'down') {
+      ITEMS[index].qty -= 1;
+    } else {
+      ITEMS[index].qty = parseInt(e.currentTarget.value);
+    }
+
+    // make sure not to less than 1
+    if (ITEMS[index].qty < 1) {
+      ITEMS[index].qty = 1;
+    } else if (ITEMS[index].qty >= PRODUCTS[index].qty) {
+      ITEMS[index].qty = PRODUCTS[index].qty;
+    }
+    refresh_items_display();
+  }
+
+  function check_for_enter_key(e) {
+    if (e.keyCode == 13) // enter key
+    {
+      BARCODE = true;
+      search_item(e);
+    }
+  }
+
+  function show_amount_paid_modal() {
+    var mydiv = document.querySelector('.js-amount-paid-modal');
+    mydiv.classList.remove('hide');
+
+  }
+
+  function hide_amount_paid_modal() {
+    var mydiv = document.querySelector('.js-amount-paid-modal');
+    mydiv.classList.add('hide');
+
   }
 
   send_data({
