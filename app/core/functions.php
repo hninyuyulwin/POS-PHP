@@ -122,3 +122,15 @@ function crop($filename, $size = 400)
 
   return $cropped_file;
 }
+
+function get_recipt_no()
+{
+  $num = 1;
+
+  $db = new Database();
+  $rows = $db->query("SELECT recipt_no from sales order by id desc limit 1");
+  if (is_array($rows)) {
+    $num = (int)$rows[0]['recipt_no'] + 1;
+  }
+  return $num;
+}
