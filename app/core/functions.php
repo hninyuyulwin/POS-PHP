@@ -48,14 +48,26 @@ function auth($column)
   return "Unknown User";
 }
 
-function crop($filename, $size = 400)
+function crop($filename, $size = 400, $type = 'product')
 {
   $ext = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
   //$cropped_file = str_replace("." . $ext, "_cropped." . $ext, $filename);
   $cropped_file = preg_replace("/\.$ext$/", "_cropped." . $ext, $filename);
 
+  // if cropped file already exitst
   if (file_exists($cropped_file)) {
     return $cropped_file;
+  }
+
+  // if file to be cropped do not exits
+  if (!file_exists($filename)) {
+    if ($type == 'male') {
+      return 'assets/images/user_male.png';
+    } else if ($type == 'female') {
+      return 'assets/images/user_female.png';
+    } else {
+      return 'assets/images/no_image.png';
+    }
   }
 
   // create image resource

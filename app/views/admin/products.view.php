@@ -1,6 +1,8 @@
-<a href="index.php?pg=product-new" class="btn btn-sm btn-primary mb-3 float-end"><i class="fa fa-plus me-2"></i>Add New</a>
+<a href="index.php?pg=product-new" class="btn btn-sm btn-primary mb-3 float-end">
+  <i class="fa fa-plus me-2"></i>Add New</a>
 <table class="table table-hovered">
   <tr>
+    <th>#</th>
     <th>Barcode</th>
     <th>Product</th>
     <th>Qty</th>
@@ -10,10 +12,12 @@
     <th>Action</th>
   </tr>
   <?php
+  $id = 1;
   if (!empty($products)) :
     foreach ($products as $product) :
   ?>
       <tr>
+        <td><?php echo $id; ?></td>
         <td><?php echo esc($product['barcode']); ?></td>
         <td>
           <a href="index.php?pg=product-single&id=<?php echo $product['id']; ?>"><?php echo esc($product['description']); ?></a>
@@ -30,6 +34,7 @@
         </td>
       </tr>
       <?php
+      $id++;
     endforeach;
   else :
       ?><?php

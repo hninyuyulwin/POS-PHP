@@ -19,6 +19,11 @@
             <i class="fa fa-hamburger me-2"></i>Products
           </li>
         </a>
+        <a href="index.php?pg=admin&tab=sales">
+          <li class="list-group-item <?php echo $tab == 'sales' ? 'active' : ''; ?>">
+            <i class="fa fa-dollar-sign me-2"></i>Sales
+          </li>
+        </a>
         <a href="index.php?pg=logout">
           <li class="list-group-item">
             <i class="fa fa-sign-out-alt me-2"></i>Logout
@@ -36,6 +41,14 @@
           switch ($tab) {
             case 'products':
               require views_path('admin/products');
+              break;
+
+            case 'users':
+              require views_path('admin/users');
+              break;
+
+            case 'sales':
+              require views_path('admin/sales');
               break;
 
             default:

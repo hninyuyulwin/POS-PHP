@@ -53,7 +53,8 @@
                   </div>
 
                   <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
-                    <button type="submit" class="btn btn-primary btn-lg">Register</button>
+                    <button type="submit" class="btn btn-primary btn-lg">Create</button>
+                    <a href="index.php?pg=admin&tab=users" class="btn btn-outline-warning btn-lg ms-2">Cancle</a>
                   </div>
 
                   <p class="text-center text-muted mb-0">Have already an account?

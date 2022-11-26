@@ -2,5 +2,9 @@
 
 defined("ABSPATH") ? "" : die();
 
-require views_path('home');
-//require "../app/views/home.view.php";
+if (Auth::access('cashier')) {
+  require views_path('home');
+} else {
+  Auth::setMessage("You need to be logged in for this page!");
+  require views_path('auth/dennied');
+}

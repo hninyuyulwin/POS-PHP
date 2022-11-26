@@ -14,7 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (empty($errors)) {
     $_POST['password'] = password_hash($_POST['password'], PASSWORD_DEFAULT);
     $user->insert($_POST);
-    redirect('login');
+    redirect('admin&tab=users');
   }
 }
-require views_path('auth/signup');
+if (Auth::access('admin')) {
+  require views_path('auth/signup');
+} else {
+  Auth::setMessage("Only Admin can create user account!!");
+  require views_path('auth/dennied');
+}
