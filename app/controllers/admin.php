@@ -10,6 +10,18 @@ if ($tab == 'products') {
 } else if ($tab == 'sales') {
   $saleClass = new Sale();
   $sales = $saleClass->query("SELECT * FROM sales ORDER By id DESC");
+
+  // get today's sales total
+  $year = date("Y");
+  $month = date("m");
+  $day = date("d");
+  $query = "SELECT sum(total) as total FROM sales WHERE day(date) = $day && month(date) = $month && year(date) = $year";
+
+  $st = $saleClass->query($query);
+  $sales_total = 0;
+  if ($st) {
+    $sales_total = $st[0]['total'] ?? 0;
+  }
 }
 
 

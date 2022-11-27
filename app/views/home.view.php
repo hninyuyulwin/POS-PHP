@@ -376,6 +376,12 @@
     // clear items
     ITEMS = [];
     refresh_items_display();
+
+    // reload products
+    send_data({
+      data_type: 'search',
+      text: ''
+    });
   }
 
   send_data({

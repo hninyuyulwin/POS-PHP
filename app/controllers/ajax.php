@@ -9,15 +9,17 @@ if (!empty($raw_data)) {
   if (is_array($OBJ)) {
     if ($OBJ['data_type'] == 'search') {
       $productClass = new Product();
+      $limit = 20;
       if (!empty($OBJ['text'])) {
         // Search
         $text = "%" . $OBJ['text'] . "%";
         $barcode = $OBJ['text'];
-        $query = "SELECT * FROM products WHERE description LIKE :find || barcode = :barcode LIMIT 10";
+        $query = "SELECT * FROM products WHERE description LIKE :find || barcode = :barcode order by views desc LIMIT $limit";
         $rows = $productClass->query($query, ['find' => $text, 'barcode' => $barcode]);
       } else {
         // Get All
-        $rows = $productClass->getAll();
+        //  $limit = 10, $offset = 0, $order = "DESC", $order_column = "id"
+        $rows = $productClass->getAll($limit, 0, 'desc', 'views');
       }
       if ($rows) {
         /*
@@ -30,13 +32,12 @@ if (!empty($raw_data)) {
         $info['data'] = $rows;
         echo json_encode($info);
       }
-    }else if ($OBJ['data_type'] == 'checkout') {
-
+    } else if ($OBJ['data_type'] == 'checkout') {
       $data = $OBJ['text'];
       $recipt_no = get_recipt_no();
       $user_id = auth("id");
       $date = date('Y-m-d H:i:s');
-  
+
       $db = new Database();
       //read from database
       foreach ($data as $row) {
@@ -56,20 +57,21 @@ if (!empty($raw_data)) {
           $arr['recipt_no'] = $recipt_no;
           $arr['date'] = $date;
           $arr['user_id'] = $user_id;
-  
+
           $query = "INSERT INTO sales (barcode,recipt_no,description,qty,amount,total,date,user_id) values (:barcode,:recipt_no,:description,:qty,:amount,:total,:date,:user_id)";
-  
           $db->query($query, $arr);
+
+          // Add view count for this product
+          $query = "UPDATE products set views=views+1 where id = :id limit 1";
+          $db->query($query, ['id' => $check['id']]);
         }
       }
-  
       // barcode   recipt_no   description   qty   amount  total   data  user_id
       $info['data_type'] = "checkout";
       $info['data'] = "Items saved success";
       echo json_encode($info);
     }
-  } 
-  
+  }
 }
 /*
 $productClass = new Product();
