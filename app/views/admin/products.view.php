@@ -41,3 +41,4 @@
       endif;
         ?>
 </table>
+<?= $pager->display(count($products)); ?>

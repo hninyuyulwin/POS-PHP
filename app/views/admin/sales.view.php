@@ -53,4 +53,10 @@
     endif;
     ?>
   </table>
+
+  <?php
+  echo $pager->display();
+  ?>
+
+
 </div>

@@ -50,3 +50,4 @@
   endif;
   ?>
 </table>
+<?php echo $pager->display(count($users)); ?>

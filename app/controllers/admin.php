@@ -3,13 +3,22 @@ $tab = $_GET['tab'] ?? 'dashboard';
 
 if ($tab == 'products') {
   $productClass = new Product();
-  $products = $productClass->query("SELECT * FROM products ORDER BY id DESC");
+  $limit = 7;
+  $pager = new Pager($limit);
+  $offset = $pager->offset;
+  $products = $productClass->query("SELECT * FROM products ORDER BY id DESC limit $limit offset $offset");
 } else if ($tab == 'users') {
   $userClass = new User();
-  $users = $userClass->query("SELECT * FROM users ORDER By id DESC");
+  $limit = 7;
+  $pager = new Pager($limit);
+  $offset = $pager->offset;
+  $users = $userClass->query("SELECT * FROM users ORDER By id DESC limit $limit offset $offset");
 } else if ($tab == 'sales') {
   $saleClass = new Sale();
-  $sales = $saleClass->query("SELECT * FROM sales ORDER By id DESC");
+  $limit = 5;
+  $pager = new Pager($limit);
+  $offset = $pager->offset;
+  $sales = $saleClass->query("SELECT * FROM sales ORDER By id DESC limit $limit offset $offset");
 
   // get today's sales total
   $year = date("Y");
