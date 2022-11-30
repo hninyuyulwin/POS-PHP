@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     redirect('admin&tab=users');
   }
 }
-if (Auth::access('admin')) {
+if (Auth::access('admin') || ($row && $row['id'] == Auth::get('id'))) {
   require views_path('auth/user-delete');
 } else {
   Auth::setMessage("Only Admin can delete user account!!");

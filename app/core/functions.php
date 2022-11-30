@@ -146,3 +146,14 @@ function get_recipt_no()
   }
   return $num;
 }
+
+function get_date($date)
+{
+  return date("d-M-Y H:i:s", strtotime($date));
+}
+
+function get_user_by_id($id)
+{
+  $user = new User();
+  return $user->first(['id' => $id]);
+}

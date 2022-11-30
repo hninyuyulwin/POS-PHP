@@ -23,9 +23,13 @@
               <input disabled value="<?php echo set_values('role', $row['role']); ?>" type="text" name="role" id="role" class=" form-control">
             </div>
             <button type="submit" class="btn btn-danger">Delete</button>
-            <a href="index.php?pg=admin&tab=users">
-              <button type="button" class="btn btn-outline-primary">Cancle</button>
-            </a>
+            <?php if (Auth::get('role') == 'admin') : ?>
+              <a href="index.php?pg=admin&tab=users">
+                <button type="button" class="btn btn-outline-primary">Cancle</button>
+              </a>
+            <?php else : ?>
+              <a href="index.php?pg=profile&id=<?= $row['id']; ?>" class="btn btn-outline-warning btn-lg ms-2">Cancle</a>
+            <?php endif; ?>
           </form>
         <?php else : ?>
           <?php if (is_array($row) && $row['role'] == 'admin') : ?>

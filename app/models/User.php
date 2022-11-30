@@ -31,6 +31,11 @@ class User extends Model
       $errors['email'] = "Invalid E-mail Format!";
     }
 
+    // Check Empty Gender
+    if (empty($data['gender'])) {
+      $errors['gender'] = "Gender fiels is required!";
+    }
+
     // Check password
     if (!$id) {
       if (empty($data['password'])) {

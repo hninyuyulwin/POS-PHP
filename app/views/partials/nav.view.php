@@ -31,7 +31,7 @@
             </a>
             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
               <li><a class="dropdown-item" href="index.php?pg=profile">Profile</a></li>
-              <li><a class="dropdown-item" href="index.php?pg=page-setting">Profile-Setting</a></li>
+              <li><a class="dropdown-item" href="index.php?pg=user-edit&id=<?= Auth::get('id') ?>">Profile-Setting</a></li>
               <li>
                 <hr class="dropdown-divider">
               </li>
