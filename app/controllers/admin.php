@@ -34,7 +34,6 @@ if ($tab == 'products') {
   $day = date("d");
   $query_total = "SELECT sum(total) as total FROM sales WHERE day(date) = $day && month(date) = $month && year(date) = $year";
 
-
   // if both startdate and enddate contain
   if ($startdate && $enddate) {
     $query = "SELECT * FROM sales WHERE date BETWEEN '$startdate' and '$enddate' ORDER By id DESC limit $limit offset $offset";
@@ -51,6 +50,25 @@ if ($tab == 'products') {
   $sales_total = 0;
   if ($st) {
     $sales_total = $st[0]['total'] ?? 0;
+  }
+
+  if ($session == 'graph') {
+    // Read graph data
+    $db = new Database();
+    // Query today's record
+    $today = date('Y-m-d');
+    $query = "SELECT total,date FROM sales WHERE DATE(date) = '$today'";
+    $today_records = $db->query($query);
+
+    // Query this month record
+    $this_month = date('m');
+    $this_year = date('Y');
+    $query = "SELECT total,date FROM sales WHERE month(date) = '$this_month' && year(date) = '$this_year' ";
+    $thismonth_records = $db->query($query);
+
+    // Query this year record
+    $query = "SELECT total,date FROM sales WHERE year(date) = '$this_year'";
+    $thisyear_records = $db->query($query);
   }
 }
 

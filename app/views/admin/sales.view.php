@@ -93,6 +93,51 @@
     ?>
   </div>
 <?php else : ?>
-  <h3>This is the graph view</h3>
-  <svg></svg>
+  <style>
+    @keyframes move {
+      0% {
+        transform: translateY(100px);
+      }
+
+      100% {
+        transform: translateY(0px);
+      }
+    }
+
+    svg circle {
+      stroke: orange;
+      animation: move 1s ease;
+    }
+
+    svg circle:hover {
+      stroke: palegreen;
+    }
+  </style>
+  <?php
+  $graph = new Graph();
+
+  $data = generate_daily_data($today_records);
+  $graph->title = "Today's Sale";
+  $graph->xtitle = "Hour of the day";
+  $graph->styles = "width:80%;margin:auto;display:block;";
+  $graph->display($data);
+  ?>
+  <br>
+
+  <?php
+  $data = generate_monthly_data($thismonth_records);
+  $graph->title = "This Month Sale";
+  $graph->xtitle = "Days of the month";
+  $graph->styles = "width:80%;margin:auto;display:block;";
+  $graph->display($data);
+  ?>
+  <br>
+
+  <?php
+  $data = generate_yearly_data($thisyear_records);
+  $graph->title = "This Year Sale";
+  $graph->xtitle = "Month of the Year";
+  $graph->styles = "width:80%;margin:auto;display:block;";
+  $graph->display($data);
+  ?>
 <?php endif; ?>
