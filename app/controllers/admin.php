@@ -70,6 +70,19 @@ if ($tab == 'products') {
     $query = "SELECT total,date FROM sales WHERE year(date) = '$this_year'";
     $thisyear_records = $db->query($query);
   }
+} else if ($tab == 'dashboard') {
+  $db = new Database();
+  $user_query = "SELECT count(id) as total_user FROM users";
+  $my_users = $db->query($user_query);
+  $total_users = $my_users['0']['total_user'];
+
+  $prod_query = "SELECT count(id) as total_prod FROM products";
+  $my_prods = $db->query($prod_query);
+  $total_prods = $my_prods['0']['total_prod'];
+
+  $sale_query = "SELECT sum(total) as total_sale FROM sales";
+  $my_sales = $db->query($sale_query);
+  $total_sales = $my_sales['0']['total_sale'];
 }
 
 if (Auth::access('supervisor')) {
