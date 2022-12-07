@@ -115,6 +115,8 @@
   var main_input = document.querySelector('.js-search');
   var GTOTAL = 0;
   var CHANGE = 0;
+  var RECEIPT_WINDOW = null;
+
 
   function search_item(e) {
     //console.log('Hello Changed');
@@ -373,6 +375,16 @@
       data_type: 'checkout',
       text: ITEMS_NEW
     });
+
+    // open recipt page
+    print_recipt({
+      company: 'Daisy',
+      amount: amount,
+      change: CHANGE,
+      data: ITEMS,
+      total: GTOTAL,
+    });
+
     // clear items
     ITEMS = [];
     refresh_items_display();
@@ -382,6 +394,14 @@
       data_type: 'search',
       text: ''
     });
+  }
+
+  function print_recipt(obj) {
+    var vars = JSON.stringify(obj);
+    RECEIPT_WINDOW = window.open('index.php?pg=print&vars=' + vars, 'printpage', "width=200px;");
+    setTimeout(function() {
+      RECEIPT_WINDOW.close();
+    }, 3000);
   }
 
   send_data({
